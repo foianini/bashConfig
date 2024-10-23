@@ -1,135 +1,74 @@
-#!/bin/bash
+-- MariaDB dump 10.19  Distrib 10.11.6-MariaDB, for debian-linux-gnu (aarch64)
+--
+-- Host: localhost    Database: equiposClinica
+-- ------------------------------------------------------
+-- Server version	10.11.6-MariaDB-0+deb12u1
 
-# Función para mostrar mensajes
-show_message() {
-  echo "====> $1"
-}
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-# Mostrar mensaje de inicio
-show_message "Iniciando configuración..."
+--
+-- Table structure for table `equiposCli`
+--
 
-# Ejecutar expansión del sistema de archivos
-show_message "Ejecutando expansión del sistema de archivos..."
-sudo raspi-config nonint do_expand_rootfs
+DROP TABLE IF EXISTS `equiposCli`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `equiposCli` (
+  `idEquip` int(11) NOT NULL AUTO_INCREMENT,
+  `EquiposClinicaMacAddress` varchar(50) DEFAULT NULL,
+  `EquiposClinicaIp` varchar(50) DEFAULT NULL,
+  `EquiposClinicaDescripcion` varchar(50) DEFAULT NULL,
+  `EquiposClinicaFechaActualizaci` datetime DEFAULT NULL,
+  `EquiposClinicaEstado` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`idEquip`)
+) ENGINE=InnoDB AUTO_INCREMENT=328 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-# Actualizar el sistema
-show_message "Actualizando el sistema..."
-sudo apt update
-sudo apt upgrade -y
+--
+-- Dumping data for table `equiposCli`
+--
 
-# Mostrar mensaje de instalación de PHP
-show_message "Instalando PHP..."
-sudo DEBIAN_FRONTEND=noninteractive apt install php -y
+LOCK TABLES `equiposCli` WRITE;
+/*!40000 ALTER TABLE `equiposCli` DISABLE KEYS */;
+INSERT INTO `equiposCli` VALUES
+(309,'e4:5f:01:1a:3a:d8','192.168.11.62','raspberrypi','2024-10-23 04:36:48','conectado'),
+(310,NULL,NULL,NULL,NULL,'conectado'),
+(311,NULL,NULL,NULL,NULL,'conectado'),
+(312,'e4:5f:01:1a:3a:d9','192.168.41.120','raspberrypi','2024-10-22 09:53:30','conectado'),
+(313,'dc:a6:32:a7:59:bd','192.168.11.175','raspberrypi','2024-09-23 11:50:42','conectado'),
+(314,NULL,NULL,NULL,NULL,'conectado'),
+(315,NULL,NULL,NULL,NULL,'conectado'),
+(316,NULL,NULL,NULL,NULL,'conectado'),
+(317,NULL,NULL,NULL,NULL,'conectado'),
+(318,NULL,NULL,NULL,NULL,'conectado'),
+(319,NULL,NULL,NULL,NULL,'conectado'),
+(320,NULL,NULL,NULL,NULL,'conectado'),
+(321,NULL,NULL,NULL,NULL,'conectado'),
+(322,NULL,NULL,NULL,NULL,'conectado'),
+(323,NULL,NULL,NULL,NULL,'conectado'),
+(324,NULL,NULL,NULL,NULL,'conectado'),
+(325,NULL,NULL,NULL,NULL,'conectado'),
+(326,NULL,NULL,NULL,NULL,'conectado'),
+(327,NULL,NULL,NULL,NULL,'conectado');
+/*!40000 ALTER TABLE `equiposCli` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-# Mostrar mensaje de habilitar SSH
-show_message "Habilitando SSH..."
-sudo systemctl enable ssh
-sudo systemctl start ssh
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-# Mostrar mensaje de cambio de contraseña
-show_message "Cambiando contraseña del usuario root..."
-echo 'root:$Turnos123$5' | sudo chpasswd
-
-# Mostrar mensaje de instalación de MariaDB Server
-show_message "Instalando MariaDB Server..."
-sudo DEBIAN_FRONTEND=noninteractive apt install mariadb-server -y
-
-# Mostrar mensaje de instalación de php-mysql
-show_message "Instalando php-mysql..."
-sudo DEBIAN_FRONTEND=noninteractive apt install php-mysql -y
-
-# Mostrar mensaje de ejecución de mysql_secure_installation
-show_message "Ejecutando mysql_secure_installation..."
-echo -e "Y\nroot\nroot\nY\nY\nY\nY" | sudo mysql_secure_installation
-
-# Mostrar mensaje de ejecución de comandos SQL en MySQL
-show_message "Ejecutando comandos SQL en MySQL..."
-sudo mysql -uroot -proot <<EOF
-CREATE USER 'admin'@'localhost' IDENTIFIED BY 'root';
-GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost';
-FLUSH PRIVILEGES;
-exit
-EOF
-
-if [ -f "todo.sql" ]; then
-    # Mostrar mensaje de ejecución de script SQL en MySQL
-    show_message "Ejecutando script SQL en MySQL..."
-    sudo mysql -uroot -proot < todo.sql
-else
-    show_message "El archivo todo.sql no se encuentra en la ruta."
-fi
-
-if [ -f "todo2.sql" ]; then
-    # Mostrar mensaje de ejecución de script SQL en MySQL
-    show_message "Ejecutando script SQL en MySQL..."
-    sudo mysql -uroot -proot < todo2.sql
-else
-    show_message "El archivo todo2.sql no se encuentra en la ruta."
-fi
-
-# Ejecutar phpenmod mysqli (con respuesta "Sí")
-show_message "Ejecutando phpenmod mysqli..."
-echo "Y" | sudo phpenmod mysqli
-
-
-# Verifica si Git está instalado
-if ! command -v git &> /dev/null; then
-    echo "Git no está instalado. Instalando Git..."
-    sudo apt-get update
-    sudo apt-get install -y git
-    echo "Git instalado correctamente."
-else
-    echo "Git ya está instalado."
-fi
-
-# Verifica si NVM está instalado
-if ! command -v nvm &> /dev/null; then
-    echo "NVM no está instalado. Instalando NVM..."
-    
-    # Descargar e instalar NVM
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-    
-    # Cargar NVM en el entorno actual
-    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    
-    echo "NVM instalado correctamente."
-else
-    echo "NVM ya está instalado."
-fi
-
-# Instalar la última versión estable de Node.js usando NVM
-echo "Instalando la última versión de Node.js..."
-nvm install node
-nvm use node
-
-# Verifica si pm2 está instalado globalmente
-if ! command -v pm2 &> /dev/null; then
-    echo "pm2 no está instalado. Instalando pm2 globalmente..."
-    npm install -g pm2
-    echo "pm2 instalado correctamente."
-else
-    echo "pm2 ya está instalado."
-fi
-
-# Clonar el repositorio de Git 
-REPO_URL="https://github.com/foianini/rapsberrysSistema.git"
-DIRECTORIO_REPO="rapsberrysSistema"
-
-echo "Clonando el repositorio..."
-git clone "$REPO_URL" "$DIRECTORIO_REPO"
-
-# Cambia al directorio del repositorio clonado
-cd "$DIRECTORIO_REPO" || exit
-
-# Ejecutar npm install
-echo "Ejecutando npm install..."
-npm install
-
-
-
-# Iniciar la aplicación usando pm2
-echo "Iniciando la aplicación con pm2..."
-pm2 start index.js
-
-echo "Proceso completado con éxito."
+-- Dump completed on 2024-10-23  4:40:04
