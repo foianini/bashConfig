@@ -113,7 +113,7 @@ else
 fi
 
 # Clonar el repositorio de Git 
-REPO_URL="https://foianini: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@github.com/foianini/rapsberrysSistema.git"
+REPO_URL="https://foianini:ghp_isXQfWPbRdrFbjNIGlm3qBt2P5qjn@github.com/foianini/rapsberrysSistema.git"
 DIRECTORIO_REPO="rapsberrysSistema"
 
 echo "Clonando el repositorio..."
